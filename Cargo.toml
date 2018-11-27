@@ -1,0 +1,16 @@
+[package]
+name = "eth_checksum"
+version = "0.1.0"
+authors = ["Miguel Mota <hello@miguelmota.com>"]
+description = "Ethereum address checksum"
+readme = "README.md"
+license = "MIT"
+repository = "https://github.com/migiuelmota/ether-convert"
+
+[dependencies]
+regex = "1"
+rust-crypto = "0.2"
+
+[[bin]]
+name = "eth_checksum"
+path = "src/bin/main.rs"
