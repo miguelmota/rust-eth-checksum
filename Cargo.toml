@@ -1,11 +1,11 @@
 [package]
-name = "eth_checksum"
-version = "0.1.0"
+name = "eth-checksum"
+version = "0.1.1"
 authors = ["Miguel Mota <hello@miguelmota.com>"]
 description = "Ethereum address checksum"
 readme = "README.md"
 license = "MIT"
-repository = "https://github.com/migiuelmota/ether-convert"
+repository = "https://github.com/miguelmota/rust-eth-checksum"
 
 [dependencies]
 regex = "1"
