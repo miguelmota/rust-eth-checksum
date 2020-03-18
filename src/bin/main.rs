@@ -1,7 +1,3 @@
-extern crate regex;
-extern crate crypto;
-extern crate eth_checksum;
-
 use std::env;
 use std::process;
 

@@ -6,11 +6,10 @@ description = "Ethereum address checksum"
 readme = "README.md"
 license = "MIT"
 repository = "https://github.com/miguelmota/rust-eth-checksum"
+edition = "2018"
 
 [dependencies]
-regex = "1"
 rust-crypto = "0.2"
-
 [[bin]]
 name = "eth_checksum"
 path = "src/bin/main.rs"
