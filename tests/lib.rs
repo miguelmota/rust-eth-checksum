@@ -1,5 +1,3 @@
-extern crate eth_checksum;
-
 #[cfg(test)]
 mod tests {
     #[test]

@@ -12,4 +12,3 @@ edition = "2018"
 rust-crypto = "0.2"
 [[bin]]
 name = "eth_checksum"
-path = "src/bin/main.rs"
