@@ -5,11 +5,11 @@ pub fn checksum(address: &str) -> String {
 
     let address_hash = {
         let mut hasher = Sha3::keccak256();
-        hasher.input_str(&address);
+        hasher.input(address.as_bytes());
         hasher.result_str()
     };
 
-    address.chars().enumerate().fold(
+    address.char_indices().fold(
         String::from("0x"),
         |mut acc, (index, address_char)| {
             // this cannot fail since it's Keccak256 hashed
