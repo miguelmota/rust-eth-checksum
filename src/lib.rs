@@ -1,4 +1,4 @@
-#![feature(test)]
+#![cfg_attr(any(test, bench), feature(test))]
 use crypto::{digest::Digest, sha3::Sha3};
 
 pub fn checksum(address: &str) -> String {
