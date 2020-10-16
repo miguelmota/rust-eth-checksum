@@ -1,31 +1,59 @@
-extern crate regex;
-extern crate crypto;
-
-use std::i64;
-use regex::Regex;
-use self::crypto::digest::Digest;
-use self::crypto::sha3::Sha3;
+#![cfg_attr(any(test, bench), feature(test))]
+use crypto::{digest::Digest, sha3::Sha3};
 
 pub fn checksum(address: &str) -> String {
-    let re = Regex::new(r"^0x").unwrap();
-    let address = address.to_lowercase();
-    let address = re.replace_all(&address, "").to_string();
+    let address = address.trim_start_matches("0x").to_lowercase();
 
-    let mut checksum_address = "0x".to_string();
-    let mut hasher = Sha3::keccak256();
-    hasher.input_str(&address);
-    let address_hash = hasher.result_str();
+    let address_hash = {
+        let mut hasher = Sha3::keccak256();
+        hasher.input(address.as_bytes());
+        hasher.result_str()
+    };
 
-    for i in 0..address.len() {
-        let n = i64::from_str_radix(&address_hash.chars().nth(i).unwrap().to_string(), 16).unwrap();
-        let ch = address.chars().nth(i).unwrap();
-        // make char uppercase if ith character is 9..f
-        if n > 7 {
-          checksum_address = format!("{}{}", checksum_address, ch.to_uppercase().to_string());
-        } else {
-          checksum_address = format!("{}{}", checksum_address, ch.to_string());
-        }
+    address
+        .char_indices()
+        .fold(String::from("0x"), |mut acc, (index, address_char)| {
+            // this cannot fail since it's Keccak256 hashed
+            let n = u16::from_str_radix(&address_hash[index..index + 1], 16).unwrap();
+
+            if n > 7 {
+                // make char uppercase if ith character is 9..f
+                acc.push_str(&address_char.to_uppercase().to_string())
+            } else {
+                // already lowercased
+                acc.push(address_char)
+            }
+
+            acc
+        })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    extern crate test;
+    use test::Bencher;
+
+    #[test]
+    fn test_checksum() {
+        let addr_lowercase = "0xe0fc04fa2d34a66b779fd5cee748268032a146c0";
+        let checksummed = checksum(addr_lowercase);
+        assert_eq!(checksummed, "0xe0FC04FA2d34a66B779fd5CEe748268032a146c0");
+
+        let addr_uppercase = "0xE0FC04FA2D34A66B779FD5CEE748268032A146C0";
+        let checksummed = checksum(addr_uppercase);
+        assert_eq!(checksummed, "0xe0FC04FA2d34a66B779fd5CEe748268032a146c0");
     }
 
-    return checksum_address;
+    #[bench]
+    fn bench_checksum(b: &mut Bencher) {
+        b.iter(|| {
+            let address = test::black_box("0xe0fc04fa2d34a66b779fd5cee748268032a146c0");
+
+            for _ in 0..20_000 {
+                checksum(address);
+            }
+        })
+    }
 }
