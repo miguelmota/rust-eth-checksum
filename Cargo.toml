@@ -1,6 +1,6 @@
 [package]
 name = "eth_checksum"
-version = "0.1.1"
+version = "0.1.2"
 authors = ["Miguel Mota <hello@miguelmota.com>"]
 description = "Ethereum address checksum"
 readme = "README.md"
